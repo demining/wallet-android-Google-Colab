@@ -40,11 +40,13 @@ class EthAccount(private val accountContext: EthAccountContext,
     }
     private val logger = Logger.getLogger(EthBalanceService::javaClass.name)
     val receivingAddress = credentials?.let { EthAddress(coinType, it.address) } ?: address!!
-    val client: Web3j get() = Web3j.build(endpoints.currentEndpoint)
+    var client: Web3j = buildCurrentEndpoint()
+    private fun buildCurrentEndpoint() = Web3j.build(endpoints.currentEndpoint)
 
     override fun setAllowZeroConfSpending(b: Boolean) {
         // TODO("not implemented")
     }
+
 
     @Throws(GenericInsufficientFundsException::class, GenericBuildTransactionException::class)
     override fun createTx(toAddress: GenericAddress, value: Value, gasPrice: GenericFee): GenericTransaction {
@@ -111,7 +113,7 @@ class EthAccount(private val accountContext: EthAccountContext,
 
     override fun getBasedOnCoinType() = coinType
 
-    private val ethBalanceService = EthBalanceService(receivingAddress.toString(), coinType, endpoints)
+    private val ethBalanceService = EthBalanceService(receivingAddress.toString(), coinType, client, endpoints)
 
     private var balanceDisposable: Disposable = subscribeOnBalanceUpdates()
 
@@ -185,12 +187,12 @@ class EthAccount(private val accountContext: EthAccountContext,
                     }
                     return true
                 }
-                endpoints.switchToNextEndpoint()
             } catch (ex: Exception) {
                 logger.log(Level.SEVERE, "Error synchronizing ETH, $ex")
                 logger.log(Level.SEVERE, "Switching to next endpoint...")
-                endpoints.switchToNextEndpoint()
             }
+            endpoints.switchToNextEndpoint()
+            client = buildCurrentEndpoint()
         }
         return false
     }
@@ -331,6 +333,8 @@ class EthAccount(private val accountContext: EthAccountContext,
     }
 
     private fun renewSubscriptions() {
+        ethBalanceService.client = client
+
         if (balanceDisposable.isDisposed) {
             balanceDisposable = subscribeOnBalanceUpdates()
         }
