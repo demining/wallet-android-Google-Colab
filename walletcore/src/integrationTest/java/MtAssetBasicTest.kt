@@ -6,7 +6,7 @@ import com.mrd.bitlib.crypto.InMemoryPrivateKey
 import com.mrd.bitlib.crypto.RandomSource
 import com.mrd.bitlib.model.AddressType
 import com.mrd.bitlib.model.NetworkParameters
-import com.mycelium.WapiLogger
+import com.mycelium.Logger
 import com.mycelium.net.HttpEndpoint
 import com.mycelium.net.HttpsEndpoint
 import com.mycelium.net.ServerEndpoints
@@ -71,7 +71,7 @@ class MtAssetBasicTest {
         val coloredCoinsApiURLs = arrayOf("http://coloredcoins-test.mycelium.com:28342/")
         val coluBlockExplorerApiURLs = arrayOf("http://coloredcoins-test.mycelium.com:28332/api/")
 
-        val wapiLogger = object : WapiLogger {
+        val Logger = object : Logger {
             override fun logError(message: String) {
                 println(message)
             }
@@ -90,7 +90,7 @@ class MtAssetBasicTest {
         val network = NetworkParameters.testNetwork
 
         val tcpEndpoints = arrayOf(TcpEndpoint("electrumx-aws-test.mycelium.com", 19335))
-        val wapiClient = WapiClientElectrumX(testnetWapiEndpoints, tcpEndpoints, wapiLogger, "0")
+        val wapiClient = WapiClientElectrumX(testnetWapiEndpoints, tcpEndpoints, Logger, "0")
 
         val socketFactory = SSLSocketFactory.getDefault()
 
