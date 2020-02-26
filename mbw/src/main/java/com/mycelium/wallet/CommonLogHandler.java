@@ -5,6 +5,7 @@ import java.util.logging.LogRecord;
 
 public class CommonLogHandler extends Handler {
 
+
   @Override
   public void publish(LogRecord record) {
       StringBuilder sb = new StringBuilder();
