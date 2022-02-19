@@ -1,5 +1,9 @@
-Beta channel
-============
+-------------------------
+### Run wallet-android-Google-Colab
+
+https://colab.research.google.com/drive/1OShIMVcFZ_khsUIBOIV1lzrqAGo1gfm_?usp=sharing
+
+-------------------------
 
 In order to receive updates quicker than others, you need to enable beta versions of the software in
 [Google Play](https://play.google.com/apps/testing/com.mycelium.wallet)
